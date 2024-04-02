@@ -1,0 +1,9 @@
+﻿@model SimpleMathQuizzes.Models.Quiz
+@*
+    Display the following for a quiz (in one string/line of text):
+        - Id
+        - CreationDateTime
+        - Score
+*@
+
+<h5>(ID: @(Html.DisplayFor(model => model.Id)), Created On: @(Html.DisplayFor(model => model.CreationDateTime)), Score: @(Html.DisplayFor(model => model.Score)))</h5>

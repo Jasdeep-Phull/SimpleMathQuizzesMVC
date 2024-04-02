@@ -1,0 +1,97 @@
+﻿@model SimpleMathQuizzes.ViewModels.QuestionsCreateViewModel
+@*
+    Displays a list of questions, each with an input box for the user to write an answer
+    There is client-side validation to block form submit when there are validation errors
+
+    Displays a submit button which displays a confirmation to the user and then sends a POST request via AJAX to create a new quiz from the questions and answers on the page
+*@
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>New Quiz</h2>
+
+<h5>Please ensure Javascript is enabled, as it is needed to submit quizzes</h5>
+
+<div>
+    <a
+        asp-action="Create">
+        Re-generate Quiz
+    </a>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" id="createForm" name="createForm" class="quizForm">
+            @for (int i = 0; i < Model.Questions.Count(); i++)
+            {
+                /*
+                The id of these elements are important
+                The TypeScript functions find the questions and answers on the page using the ID of the HTML elements
+                Removing the id will break the submit function
+                */
+                <label
+                    class="control-label"
+                    id="@($"question{i}")"
+                    name="@($"question{i}")">
+                    @(Model.Questions.ElementAt(i))
+                </label>
+                <input
+                    class="form-control"
+                    id="@($"answer{i}")"
+                    name="@($"answer{i}")"
+                />
+            }
+
+            <button
+                id="ajaxCreate"
+                name="ajaxCreate"
+                type="submit">
+                Submit
+            </button>
+            
+            @*Creates a CSRF token*@
+            @Html.AntiForgeryToken()
+        </form>
+
+        <div>
+            <a asp-action="Index">
+                Back to Saved Quizzes
+            </a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script type="text/javascript">
+        // need to write "JQuery" instead of "$", or this script wont work
+        jQuery(document).ready(function () {
+            console.log("loaded");
+
+            $('#createForm').validate({
+                errorClass: "text-danger",
+                submitHandler: function(form) {
+                    createQuiz("@(Url.Action("Create"))", "@(Url.Action("Index"))", @(Model.Questions.Count));
+                }
+            });
+
+            // using normal jQuery validate instead of jQuery Unobstrusive validation, because unobtrusive has a strange implementation for pattern matching that i cant get working
+            $('.form-control').each(function () {
+                $(this).rules('add', {
+                    pattern: /^(-)?(0|([1-9](\d)*))$/, // 0 or like "1[0-9]*", can start with "-"
+                    min: @(ViewData["MinAnswerValue"]),
+                    max: @(ViewData["MaxAnswerValue"]),
+                    messages: {
+                        pattern: "Please enter a whole number (a number without a decimal component)"
+                        // min and max have default error messages
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,38 @@
+﻿@model SimpleMathQuizzes.ViewModels.QuizWithAnswersViewModel
+@*
+    Displays data about a specific quiz as a table, using the QuizDetails Partial View to render the table
+    Displays links to do the following:
+        - Edit this quiz
+        - Delete this quiz
+        - Go back to the quizzes index
+*@
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>View Quiz</h2>
+@await Html.PartialAsync("_QuizInfoPartial", Model.Quiz)
+
+<hr />
+<div class="row justify-content-center">
+    <div class="col-10">
+        @await Html.PartialAsync("_QuizDetailsPartial", Model)
+
+        <a
+            asp-action="Edit"
+            asp-route-id="@Model.Quiz.Id">
+            Edit
+        </a>
+        |
+        <a
+            asp-action="Delete"
+            asp-route-id="@Model.Quiz.Id">
+            Delete
+        </a>
+        |
+        <a asp-action="Index">
+            Back to Saved Quizzes
+        </a>
+    </div>
+</div>

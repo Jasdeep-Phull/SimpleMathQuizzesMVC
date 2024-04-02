@@ -1,0 +1,31 @@
+﻿@model SimpleMathQuizzes.ViewModels.QuizWithAnswersViewModel
+@*
+    Displays data about a specific quiz as a table, using the QuizDetails Partial View to render the table
+    Displays a submit button in a form, which sends a POST request to delete this quiz
+    Also displays links to do the following:
+        - view the quiz
+        - Go back to the quizzes index
+*@
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete Quiz? </h2>
+@await Html.PartialAsync("_QuizInfoPartial", Model.Quiz)
+
+<hr />
+<div class="row justify-content-center">
+    <div class="col-10">
+        <h3>Are you sure you want to delete this quiz?</h3>
+
+        @await Html.PartialAsync("_QuizDetailsPartial", Model)
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Quiz.Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Details" asp-route-id="@Model.Quiz.Id">Back to Quiz View</a> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    </div>
+</div>
