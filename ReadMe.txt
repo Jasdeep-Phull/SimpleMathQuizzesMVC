@@ -1,3 +1,7 @@
+A web application that allows users to create, view, edit and delete simple math quizzes. Users must have an account.
+Uses: ASP.NET Core MVC, Postgresql (via Entity Framework Core), jQuery
+
+
 Extra info that might be useful:
 
 Form validation uses jQuery Validation (with jQuery version 3.6.0), Typescript uses jQuery version 3.5.29 via npm.
